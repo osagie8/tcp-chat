@@ -54,6 +54,10 @@ This project is a TCP-based chat application for real-time communication between
 ## Testing
 
 - Program was tested on one machine. I intend to test it out with multiple machines.
-- 
+
+## Known Bugs
+
+- The GUI somtimes doesnt show what you have texted.
+
 
 
