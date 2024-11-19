@@ -9,7 +9,7 @@
 # TCP Chat Application
 
 ## Description
-This project is a TCP-based chat application designed for real-time communication between multiple clients connected to a central server. It offers a simple command-line interface alongside a graphical user interface, supporting private and broadcast messaging, file sharing, and seamless reconnection for disconnected clients.
+This project is a TCP-based chat application for real-time communication between multiple clients connected to a central/main server. It offers a command-line interface alongside a graphical user interface (GUI), supports private and broadcast messaging, file sharing, and seamless reconnection for disconnected clients.
 
 ## Features
 - **Server Features**:
