@@ -1,3 +1,11 @@
+
+ * author: Osagie Owie
+ * email: owieo204@potsdam.edu
+ * course: CIS 480 Senior Project
+ * assignment: Senior Project
+ * due 12/9/24 
+
+
 # TCP Chat Application
 
 ## Description
@@ -19,8 +27,33 @@ This project is a TCP-based chat application designed for real-time communicatio
 - **Programming Language**: Python
 - **Libraries**: `socket`, `threading`, `tkinter`
 
-## How to Run
+## How to Run + Environment Setup
 1. Clone the repository:
-   ```bash
+   ```bash 
    git clone https://cs-devel.potsdam.edu/S24-480-owieo204/tcp-chat.git
+
+- Since we are using one machine for now, create 3 different terminal sessions to simulate 3 connected machines .
+
+2. Run server.py
+    ```bash
+    python server.py
+
+3. Run client.py
+    ```bash
+    python client.py
+
+4. Run gclient.py
+    ```bash
+    python gclient.py
+
+## Program Execution Instructions
+
+1.  Write text in client.py CLI and it will broadcast to any other client that is is our server.
+2.  Write text in the gclient.py GUI and it will broadcast to any other client that is is our server.
+
+## Testing
+
+- Program was tested on one machine. I intend to test it out with multiple machines.
+- 
+
 
