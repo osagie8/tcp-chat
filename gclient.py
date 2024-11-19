@@ -62,12 +62,4 @@ message_entry.pack(padx=20, pady=5, fill=tk.X)
 send_button = tk.Button(window, text="Send", command=send)
 send_button.pack(padx=20, pady=5)
 
-# Start the receive thread
-receive_thread = threading.Thread(target=receive)
-receive_thread.start()
-
-# Handle window close event
-window.protocol("WM_DELETE_WINDOW", on_closing)
-
-# Run the GUI event loop
-window.mainloop()
+# Star

@@ -44,8 +44,3 @@ print(f"Server started on {HOST}:{PORT}")
 
 while True:
     client, address = sock.accept()
-    print(f"{address} connected")
-    client.send("Welcome to the chat room!".encode())
-    clients.append(client)
-    thread = threading.Thread(target=handle, args=(client,))
-    thread.start()
