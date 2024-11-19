@@ -1,3 +1,13 @@
+'''
+server.py is the Server for the TCP chat application.
+
+  @author Osagie Owie
+  @email owieo204@potsdam.edu
+  @course CIS 480 Senior Project
+  @assignment: Senior Project
+  @due 12/9/24 
+ '''
+
 import socket
 import threading
 

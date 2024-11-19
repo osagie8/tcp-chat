@@ -1,3 +1,12 @@
+'''
+gclient.py is the user interface for the TCP chat application with a GUI.
+
+  @author Osagie Owie
+  @email owieo204@potsdam.edu
+  @course CIS 480 Senior Project
+  @assignment: Senior Project
+  @due 12/9/24 
+ '''
 import socket
 import threading
 import tkinter as tk
