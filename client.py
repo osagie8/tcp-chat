@@ -34,4 +34,13 @@ def receive():
 def send():
     while True:
         message = input()
-    
+        sock.send(message.encode())
+
+# Start threads for receiving and sending messages
+receive_thread = threading.Thread(target=receive)
+send_thread = threading.Thread(target=send)
+
+receive_thread.start()
+send_thread.start()
+
+
