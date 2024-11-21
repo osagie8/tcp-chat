@@ -40,7 +40,7 @@ This project is a TCP-based chat application for real-time communication between
 
 3. Run client.py
     ```bash
-    python3 client.py
+    python3 client.py --host 127.0.0.1 --port 9090 
 
 
 

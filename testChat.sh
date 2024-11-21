@@ -43,7 +43,4 @@ sleep 1
 # Wait for a few seconds to let clients exchange messages
 sleep 5
 
-# Clean up: Kill the server and clients
-#kill $SERVER_PID $CLIENT1_PID $CLIENT2_PID
-#echo "Processes terminated."
 

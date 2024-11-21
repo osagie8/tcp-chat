@@ -47,6 +47,4 @@ echo "Client 3 (Charlie) started with PID $CLIENT3_PID"
 # Wait for a few seconds to let clients exchange messages
 sleep 15
 
-# Clean up: Kill the server and clients
-# kill $SERVER_PID $CLIENT1_PID $CLIENT2_PID $CLIENT3_PID
-# echo "Processes terminated."
+
