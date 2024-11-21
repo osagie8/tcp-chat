@@ -44,6 +44,6 @@ sleep 1
 sleep 5
 
 # Clean up: Kill the server and clients
-kill $SERVER_PID $CLIENT1_PID $CLIENT2_PID
-echo "Processes terminated."
+#kill $SERVER_PID $CLIENT1_PID $CLIENT2_PID
+#echo "Processes terminated."
 

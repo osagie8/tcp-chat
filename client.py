@@ -12,32 +12,39 @@ import socket
 import threading
 import argparse
 
-def receive(sock):
+def receive(sock, is_active):
     """Receive messages from the server."""
-    while True:
+    while is_active[0]:
         try:
             message = sock.recv(1024).decode()
             if not message:
-                raise ConnectionResetError
+                print("Server closed the connection.")
+                break
             print(message)
         except ConnectionResetError:
             print("Disconnected from server.")
             break
-        except Exception as e:
-            print(f"Error: {e}")
+        except OSError:
+            # This occurs when the socket is already closed
             break
-    sock.close()
+        except Exception as e:
+            print(f"Error receiving message: {e}")
+            break
+    is_active[0] = False  # Signal to stop other thread
 
-def send(sock):
+def send(sock, is_active):
     """Send messages to the server."""
-    while True:
+    while is_active[0]:
         try:
             message = input()
             if message.lower() == "/quit":
                 print("Disconnecting from server...")
-                sock.close()
+                is_active[0] = False  # Signal to stop other thread
                 break
             sock.send(message.encode())
+        except OSError:
+            # This occurs when the socket is already closed
+            break
         except Exception as e:
             print(f"Error sending message: {e}")
             break
@@ -51,6 +58,8 @@ def main():
     host, port = args.host, args.port
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    is_active = [True]  # Shared state to manage socket activity across threads
+
     try:
         sock.connect((host, port))
         print(f"Connected to chat server at {host}:{port}")
@@ -59,18 +68,22 @@ def main():
         name = input("Enter your name: ").strip()
         sock.send(name.encode())
 
-        receive_thread = threading.Thread(target=receive, args=(sock,))
+        # Start threads
+        receive_thread = threading.Thread(target=receive, args=(sock, is_active))
         receive_thread.start()
 
-        send(sock)
+        send(sock, is_active)  # Runs in the main thread
     except ConnectionRefusedError:
         print("Unable to connect to the server. Please check the host and port.")
     except Exception as e:
         print(f"Error: {e}")
     finally:
-        sock.close()
+        is_active[0] = False  # Ensure all threads stop
+        try:
+            sock.close()  # Safely close the socket
+        except OSError:
+            pass  # Ignore if socket is already closed
+        print("Client closed.")
 
 if __name__ == "__main__":
     main()
-
-
