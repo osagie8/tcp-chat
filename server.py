@@ -10,42 +10,90 @@ server.py is the Server for the TCP chat application.
 
 import socket
 import threading
+import argparse
+import logging
 
-# Server settings
-HOST = "127.0.0.1"  # Localhost
-PORT = 9090         # Port number
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 
-# Initialize socket
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.bind((HOST, PORT))
-sock.listen()  # Listen for incoming connections
+def broadcast(message, sender, clients, lock):
+    """Broadcast message to all clients except the sender."""
+    with lock:
+        for client, name in clients.items():
+            if client != sender:
+                try:
+                    client.send(message.encode())
+                except Exception as e:
+                    logging.error(f"Error broadcasting message: {e}")
+                    client.close()
+                    del clients[client]
 
-clients = []
+def handle_client(client, address, clients, lock):
+    """Handle communication with a single client."""
+    logging.info(f"Handling client {address}")
+    try:
+        # Ask for the client's name
+        client.send("Enter your name: ".encode())
+        name = client.recv(1024).decode().strip()
+        if not name:
+            name = f"Client-{address[1]}"  # Default name if none provided
 
-# Function to broadcast messages to all clients except the sender
-def broadcast(message, sender):
-    for client in clients:
-        if client != sender:
-            client.send(message)
+        # Add client to the list
+        with lock:
+            clients[client] = name
 
-# Function to handle communication with a single client
-def handle(client):
-    while True:
-        try:
-            message = client.recv(1024)
-            broadcast(message, client)
-        except:
-            clients.remove(client)
-            client.close()
-            break
+        welcome_message = f"{name} has joined the chat!"
+        logging.info(welcome_message)
+        broadcast(welcome_message, client, clients, lock)
 
-# Start the server
-print(f"Server started on {HOST}:{PORT}")
+        # Handle incoming messages
+        while True:
+            message = client.recv(1024).decode()
+            if not message:
+                raise ConnectionResetError
+            formatted_message = f"{name}: {message}"
+            logging.info(formatted_message)
+            broadcast(formatted_message, client, clients, lock)
+    except ConnectionResetError:
+        logging.info(f"{clients.get(client, 'Unknown Client')} disconnected")
+    except Exception as e:
+        logging.error(f"Error with client {address}: {e}")
+    finally:
+        # Clean up on disconnection
+        with lock:
+            if client in clients:
+                disconnected_name = clients[client]
+                del clients[client]
+                broadcast(f"{disconnected_name} has left the chat.", client, clients, lock)
+        client.close()
 
-while True:
-    client, address = sock.accept()
-    print(f"{address} connected")
-    client.send("Welcome to the chat room!".encode())
-    clients.append(client)
-    thread = threading.Thread(target=handle, args=(client,))
-    thread.start()
+def main():
+    """Main server function."""
+    parser = argparse.ArgumentParser(description="TCP Chat Server")
+    parser.add_argument("--host", default="127.0.0.1", help="Server IP address")
+    parser.add_argument("--port", type=int, default=9090, help="Server port")
+    args = parser.parse_args()
+
+    host, port = args.host, args.port
+
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind((host, port))
+    server_socket.listen()
+    logging.info(f"Server started on {host}:{port}")
+
+    clients = {}  # Store clients as {socket: name}
+    lock = threading.Lock()
+
+    try:
+        while True:
+            client, address = server_socket.accept()
+            logging.info(f"New connection from {address}")
+            thread = threading.Thread(target=handle_client, args=(client, address, clients, lock))
+            thread.start()
+    except KeyboardInterrupt:
+        logging.info("Shutting down the server...")
+    finally:
+        server_socket.close()
+
+if __name__ == "__main__":
+    main()
