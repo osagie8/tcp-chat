@@ -49,7 +49,7 @@ This project is a TCP-based chat application for real-time communication between
  
 1. After __Python3 client.py__ is ran, Enter your chat name.
 2. Write text in client.py CLI and it will broadcast to any other client that is is our server.
-  - Open multiple terminal sessions and run python3 client.py again.
+    - Open multiple terminal sessions and run python3 client.py again.
 
 
 ## __Testing__
@@ -78,15 +78,19 @@ Verify that multiple clients will be able to send and receive messages at the sa
     __testChat.sh__ connects two clients to the server with each client running in 
     separate threads, and sends messages from both clients at the same time. It checks for 
     proper receipt of messages without delays, duplication, or loss, ensuring real-time
-    communication functionality.
-  - - __Test Script Description: portClear.sh__
+    communication functionality. 
+      
+  - __Test Script Description: portClear.sh__   
     __portClear.sh__ clears ports from being used that may get clobbered when running these test. This is to ensure
     a port is open before testing on it.
           
 **Results**:  
-- When running my tests, data appears to be lost. Im expected more dialouge from the other two clients "Alice" and "Bob".      
+- When running my tests, data appears to be lost. Im expected more dialouge from the other two clients "Alice" and "Bob".    
 
-<img src="screenshot1.png" alt="Alt text" width="200" height="150"/>
+<div align="center">
+    <img src="screenshot1.png" alt="Project Screenshot" width="600">
+</div>
+
 
 
 ## Known Bugs
