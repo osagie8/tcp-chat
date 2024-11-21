@@ -12,6 +12,7 @@ import socket
 import threading
 import argparse
 import logging
+import time
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
@@ -19,7 +20,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 def broadcast(message, sender, clients, lock):
     """Broadcast message to all clients except the sender."""
     with lock:
-        for client, name in clients.items():
+        for client, name in list(clients.items()):
             if client != sender:
                 try:
                     client.send(message.encode())
@@ -67,6 +68,14 @@ def handle_client(client, address, clients, lock):
                 broadcast(f"{disconnected_name} has left the chat.", client, clients, lock)
         client.close()
 
+def monitor_client_count(clients, lock):
+    """Continuously monitor and log the number of connected clients."""
+    while True:
+        with lock:
+            num_clients = len(clients)
+        logging.info(f"Number of connected clients: {num_clients}")
+        time.sleep(5)  # Update every 5 seconds
+
 def main():
     """Main server function."""
     parser = argparse.ArgumentParser(description="TCP Chat Server")
@@ -83,6 +92,10 @@ def main():
 
     clients = {}  # Store clients as {socket: name}
     lock = threading.Lock()
+
+    # Start the client monitor thread
+    monitor_thread = threading.Thread(target=monitor_client_count, args=(clients, lock), daemon=True)
+    monitor_thread.start()
 
     try:
         while True:
