@@ -105,3 +105,65 @@ A link to a user experience __[flow chart](https://ibb.co/HHvK6N1)__ is below.
 
 __https://ibb.co/HHvK6N1__
 
+## Security
+
+My approach for secruity is to secure the contents of the messages sent. I plan to do this using a Python library called PyCryptodome.
+## Testing
+
+- Test this in a real world scenerio using a Virtual Machines and a virtual network. 
+- Set up the multiple Virtual Machines Using Microsoft Azure. The network group will be confirgured so that the VM will be be on the same network.
+
+
+I plan to use Pytest library to test socket connections. These are important test cases to ensure a reliable application.
+
+## Test Cases 
+1. Server Starts and Listens
+2. Server Handles Invalid Port
+3. Client Connects Successfully
+4. Retrieving users/messages from Database 
+5. Single Client Message
+6. Broadcast to All Clients
+7. Client Disconnection
+8. Multiple Clients
+10. Large Number of Connections
+11. Client Handles Connection Failure
+
+
+## Libraries to be Used 
+ 
+- **socket**:
+    - Establishes a connection between the server and client over TCP.
+    - Sends and receives messages between the server and client.
+    - Listens for client connections on the server side.
+
+- **threading**:
+    - Allows the server to handle multiple clients simultaneously by creating a thread for each client connection.
+
+- **os**:
+    - Manages file paths for storing log files or database files.
+
+- **sys**: 
+    - Enables the app to accept command-line arguments for running the server or client.
+
+- **time**:
+    - Timestamp messages for logging or display.
+
+- **PyCryptodome**: 
+    - Encrypt messages exchanged between clients and the server to ensure confidentiality.
+
+- **sqlite3**: 
+    - Stores user information (username and password).
+    - Saves chat messages for group chats and private chats.
+
+- **PyInstaller**:
+    - Packages the server.py and client.py files into separate executables for easy distribution.
+    - Makes sure that users don’t need to manually install dependencies.
+- **pytest**: 
+    - Message sending and receiving over socket.
+    - Database interactions like retrieving user messages.
+
+
+
+
+
+
