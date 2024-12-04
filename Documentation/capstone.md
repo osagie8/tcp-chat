@@ -183,10 +183,13 @@ __Acceptance requirements:__  Passwords are hashed using industry standards.
 **Database**
 1. __[1 Priority]__ Create a database schema for storing user information, including username and hashed password.
 __Acceptance requirements:__  User data is securely stored in the database.
-2. __[1 Priority]__  Create a database schema for storing chat messages, including sender ID and content.
+2. __[1 Priority]__ Practice SQLite Create, Read, Update, Delete operations.
+__Acceptance requirements:__  General understanding of the operations(Testing)
+3. __[1 Priority]__  Create a database schema for storing chat messages, including sender ID and content.
 __Acceptance requirements:__  Messages are stored and retrievable by user and chatroom.
-3. __[2 Priority]__  Create a database schema for storing chatroom details, including room ID and admin ID.
+4. __[2 Priority]__  Create a database schema for storing chatroom details, including room ID and admin ID.
 __Acceptance requirements:__  Chatroom details are persisted for session management.
+
 
 **Testing**
 1. __[1 Priority]__  Write test cases for server startup and listening capabilities.
