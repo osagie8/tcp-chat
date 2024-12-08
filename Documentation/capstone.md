@@ -1,4 +1,6 @@
 
+## Backlog Items Completed
+
 ## User Stories
 **Main Menu**
 - As a user of the chat app, I want to see a main menu after logging in so that I can easily navigate the app’s features.
@@ -208,4 +210,6 @@ __Acceptance requirements:__  Encrypted messages are transmitted and decrypted c
 __Acceptance requirements:__  Clients reconnect seamlessly after disconnection.
 8. __[3 Priority]__  Simulate and test real-world scenarios using virtual machines and networks.
 __Acceptance requirements:__ The system works as expected in real-world environments.
+
+
 
