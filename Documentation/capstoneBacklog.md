@@ -135,7 +135,7 @@ __Acceptance requirements:__ Users receive a clear error message for duplicate u
 **User Management**
 1. __[1 Priority]__ Implement user registration with a unique username.
 __Acceptance requirements:__ Users can create unique usernames at registration.
-2. __[2 Priority]__ Develop functionality to display a list of all online users.
+2. __[2 Priority]__ Develop functionality to display a list of all online users(UserID).
 __Acceptance requirements:__ Users can see a list of active users in the system.
 3. __[2 Priority]__ Implement a feature to allow users to change their username dynamically while connected.
 __Acceptance requirements:__ Users can update their usernames during a session.

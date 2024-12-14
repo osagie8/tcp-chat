@@ -7,3 +7,6 @@
 [Dec 13] - Technical Debt for socket module.  
 		- Continue walking skelton
 			- Started Implementation of data base
+
+[Dec 14] - Database work
+		

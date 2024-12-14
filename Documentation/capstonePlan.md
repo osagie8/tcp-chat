@@ -9,6 +9,7 @@
 
     1. Create a chat room
     2. Join a chat room
+        - View Available chat rooms 
     3. Compose a private message
     4. View private chats
 
