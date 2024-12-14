@@ -95,3 +95,5 @@ Verify that multiple clients will be able to send and receive messages at the sa
 
 ## Known Bugs
 
+- When you disconnect a client, the server loses track of connected clients.
+

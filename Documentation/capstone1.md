@@ -178,7 +178,11 @@ I plan to use the Pytest library to test socket connections. These are important
 
 References  
 
+- https://blog.wittcode.com/blogs/python-socket-programming-multiple-clients-chat
+
 - Ivan-Sincek (no date) Ivan-Sincek/chat-app: Multithreading TCP server and client communicating over TCP/IP - Windows Forms application., GitHub. Available at: https://github.com/ivan-sincek/chat-app (Accessed: 24 November 2024).
+
+
 
 
 
