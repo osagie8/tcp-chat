@@ -1,80 +1,84 @@
 import socket
 from threading import Thread
-# Provides us with methods for interacting with the operating system.
 import os
 
 class Client:
-  
-  # Client Contructor Connects to the server, ask for
-  # a username, and begin server communication.
-  def __init__(self, HOST, PORT):
-    self.socket = socket.socket()
-    self.socket.connect((HOST, PORT))
-    self.name = input("Enter your name: ")
-    #print("\n" + "\033[1;32;40m" + "Your User ID is: " + self.socket.recv(1024).decode() + "\033[0m")
+    def __init__(self, HOST, PORT):
+        self.socket = socket.socket()
+        self.socket.connect((HOST, PORT))
+        self.name = input("Enter your name: ")
+        self.socket.send(self.name.encode())
+        Thread(target=self.receive_message).start()
+        self.client_main_menu()
 
-    self.talk_to_server()
-  
-  def client_main_menu(client):
-    while True:
-        print("\033[1;32;40m" + "Welcome to the chat app!" + "\033[0m")
-        
-        print("1. Create new chat room")
-        print("2. Join existing chat room")
-        print("3. Create a Private Message")
-        print("4. Help")
+    def client_main_menu(self):
+        while True:
+            print("\033[1;32;40mWelcome to the chat app!\033[0m")
+            print("1. Create new chatroom")
+            print("2. Join existing chatroom")
+            print("3. Create a Private Message")
+            print("4. Exit Application")
+            print("========================")
 
-        print("5. Exit Application")
-       
-        print("========================")
-        
-        choice = input("Enter your choice: ")
-        
-        if choice == '1':
-            chatroom_name = input("Enter the name of the chat room: ")
-            client.socket.send(f"/create_chatroom {chatroom_name}".encode())
-            response = client.socket.recv(1024).decode()
-            print(response)
-            
-        elif choice == '5':
-            print("Exiting the chat...")
-            client.socket.close()
-            os._exit(0)    
-        else:
-            print("Invalid choice, please try again.")  
+            choice = input("Enter your choice: ")
 
- 
-  def talk_to_server(self):
-    # Send over the name of the client. 
-    self.socket.send(self.name.encode())
-    # Then start listening for messages on a separate thread.
-    Thread(target = self.receive_message).start()
-    self.client_main_menu()
-    self.send_message()
-    
-    
-  # Get user input and send the message to the server
-  # with the client's name prepended.
-  def send_message(self):
-    while True:
-      client_input = input("")
-      if client_input.strip().lower() == "/exit":
-                print("Exiting the chat...")
+            if choice == '1':
+                chatroom_name = input("Enter the name of the chat room: ")
+                self.socket.send(f"/create_chatroom {chatroom_name}".encode())
+                response = self.socket.recv(1024).decode()
+                print(f"Server response: {response}")  # Debugging line
+                if "created successfully" in response:
+                    print(f"\033[1;32;40mWelcome to the chat room '{chatroom_name}'!\033[0m")
+                    self.chatroom_screen(chatroom_name)
+                else:
+                    print("Failed to join the chat room. Server Response: "+response)
+
+            elif choice == '2':
+                chatroom_name = input("Enter the name of the chat room to join: ")
+                self.socket.send(f"/join_chatroom {chatroom_name}".encode())
+                response = self.socket.recv(1024).decode().strip()
+                print(f"Server response: {response}")  # Debugging line
+                if "Joined" in response:
+                    self.clear_terminal()
+                    print(f"\033[1;32;40mWelcome to the chat room '{chatroom_name}'!\033[0m")
+                    self.chatroom_screen(chatroom_name)
+                else:
+                    print(response)
+                    #print("responseresponseresponseresponseresponse")
+
+            elif choice == '4':
+                print("Exiting the application...")
                 self.socket.close()
                 os._exit(0)
-      client_message = self.name + ": " + client_input
-      self.socket.send(client_message.encode())
-      
-  # Constantly listen out for messages. If the message is response
-  # from the server is empty, close the program.
-  def receive_message(self):
-    while True:
-      server_message = self.socket.recv(1024).decode()
-      if not server_message.strip():
-        os._exit(0)
- 
-      print("\n" + "\033[1;32;40m" + "User ID " + server_message + "\033[0m")
-      
+
+            else:
+                print("Invalid choice, please try again.")
+
+    def clear_terminal(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+    def chatroom_screen(self, chatroom_name):
+        while True:
+            message = input("")
+            if message.lower() == "exit":
+                self.socket.send(f"/exit_chatroom {chatroom_name}".encode())
+                print("Exiting chatroom...")
+                break
+            self.socket.send(f"/chatroom_message {chatroom_name} {message}".encode())
+
+    def receive_message(self):
+        while True:
+            try:
+                server_message = self.socket.recv(1024).decode()
+                if server_message == "exit":
+                    print("You have been returned to the main menu.")
+                    break
+                print(server_message)
+            except:
+                print("Connection closed by server.")
+                self.socket.close()
+                break
+
+
 if __name__ == '__main__':
-  client = Client('127.0.0.1', 7632)
-  client.client_main_menu(client)
+    client = Client('127.0.0.1', 7632)
