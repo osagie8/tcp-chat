@@ -39,17 +39,18 @@ class Server:
         CREATE TABLE IF NOT EXISTS chatroom_members (
             chatroom_id INTEGER,
             user_id INTEGER,
+            PRIMARY KEY (chatroom_id, user_id),
             FOREIGN KEY (chatroom_id) REFERENCES chatrooms (chatroom_id),
             FOREIGN KEY (user_id) REFERENCES users (user_id)
         )''')
 
-        # Create messages table
+        # Creating messages table
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS messages (
             message_id INTEGER PRIMARY KEY AUTOINCREMENT,
             chatroom_id INTEGER,
             user_id INTEGER,
-            message TEXT NOT NULL,
+            message TEXT,
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (chatroom_id) REFERENCES chatrooms (chatroom_id),
             FOREIGN KEY (user_id) REFERENCES users (user_id)
@@ -87,11 +88,25 @@ class Server:
                 elif message.startswith("/join_chatroom"):
                     chatroom_name = message.split(" ", 1)[1]
                     response = self.add_user_to_chatroom(chatroom_name, client_name)
+                    print(response)
                     client_socket.send(response.encode())
 
                 elif message.startswith("/chatroom_message"):
                     _, chatroom_name, chat_message = message.split(" ", 2)
                     self.broadcast_chatroom_message(chatroom_name, client_name, chat_message)
+
+                elif message.startswith("/view_chatroom_users"):
+                    chatroom_name = message.split(" ", 1)[1]
+                    response = self.view_chatroom_users(chatroom_name)
+                    client_socket.send(response.encode())
+
+                elif message.startswith("/chatroom_view"): 
+                    conn = sqlite3.connect('chat_app.db')
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT name FROM chatrooms")
+                    chatrooms = [row[0] for row in cursor.fetchall()]
+                    conn.close()
+                    client_socket.send(', '.join(chatrooms).encode())
 
                 elif message.startswith("/exit_chatroom"):
                     chatroom_name = message.split(" ", 1)[1]
@@ -128,22 +143,55 @@ class Server:
                        (chatroom_id[0], user_name))
         conn.commit()
         conn.close()
-        return f"Joined chatroomed '{chatroom_name}'."
+        return f"Joined chatroom '{chatroom_name}'."
+    
+    def view_chatroom_users(self, chatroom_name):
+        conn = sqlite3.connect('chat_app.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT chatroom_id FROM chatrooms WHERE name = ?", (chatroom_name,))
+        chatroom_id = cursor.fetchone()
+        if not chatroom_id:
+            conn.close()
+            return f"Chatroom '{chatroom_name}' does not exist."
+        cursor.execute("SELECT username FROM users JOIN chatroom_members ON users.user_id = chatroom_members.user_id WHERE chatroom_id = ?",
+                       (chatroom_id[0],))
+        users = [row[0] for row in cursor.fetchall()]
+        conn.close()
+        return ', '.join(users)
 
     def broadcast_chatroom_message(self, chatroom_name, sender_name, message):
         conn = sqlite3.connect('chat_app.db')
         cursor = conn.cursor()
 
+        # Get chatroom id
         cursor.execute("SELECT chatroom_id FROM chatrooms WHERE name = ?", (chatroom_name,))
         chatroom_id = cursor.fetchone()
         if not chatroom_id:
             return
+        chatroom_id = chatroom_id[0]
 
+        # Get sender's user ID
+        cursor.execute("SELECT user_id FROM users WHERE username = ?", (sender_name,))
+        user_id = cursor.fetchone()
+        if not user_id:
+            conn.close()
+            return
+        user_id = user_id[0]
+
+        print(user_id)
+
+        # Store the message in the database
+        cursor.execute("INSERT INTO messages (chatroom_id, user_id, message) VALUES (?, ?, ?)",
+                       (chatroom_id, user_id, message))
+        conn.commit()
+
+        # Broadcast the message to all members of the chatroom
         cursor.execute("SELECT username FROM users JOIN chatroom_members ON users.user_id = chatroom_members.user_id WHERE chatroom_id = ?",
-                       (chatroom_id[0],))
+                       (chatroom_id,))
         members = [row[0] for row in cursor.fetchall()]
         conn.close()
 
+        # Send the message to connected clients
         for client in Server.clients:
             if client['name'] in members and client['name'] != sender_name:
                 client['socket'].send(f"{sender_name}@{chatroom_name}: {message}".encode())

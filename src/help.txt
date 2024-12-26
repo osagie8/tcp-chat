@@ -1,0 +1,30 @@
+Welcome to the Chat Application!
+
+Here are the available commands:
+
+1. Create new chatroom
+   - Select '1' to create a new chatroom.
+   - You will be prompted to enter the name of the chatroom.
+   - Example: Enter "MyChatRoom" to create a chatroom named "MyChatRoom".
+
+2. Join existing chatroom
+   - Select '2' to join an existing chatroom.
+   - You will be prompted to enter the name of the chatroom you want to join.
+   - Example: Enter "MyChatRoom" to join the chatroom named "MyChatRoom".
+
+3. View available chatrooms
+   - Select this option to view a list of all available chatrooms.
+   - The server will send a list of chatrooms, which will be displayed on your screen.
+
+4. Help
+   - Select this option to view this help information.
+
+5. Exit Application
+   - Select this option to exit the chat application.
+
+In the chatroom:
+- Type your messages and press Enter to send them.
+- Type '/view' to view the users in the chatroom.
+- Type '/exit' to leave the chatroom.
+
+Enjoy chatting!

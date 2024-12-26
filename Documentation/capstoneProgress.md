@@ -9,5 +9,10 @@
 			- Started Implementation of data base
 
 [Dec 14] - Database work
-		- Group chat implementation 
+		- Group chat implementation
+
+[Dec 26] - Debugging and more Group chat Work
+
+
+
 		

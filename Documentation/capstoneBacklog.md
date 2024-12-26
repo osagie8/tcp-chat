@@ -1,6 +1,17 @@
 
 ## Backlog Items Completed
 
+1. __[1 Priority]__ Design and implement the main menu UI.
+__Acceptance requirements:__ Users can navigate the app’s features using the command-line interface.
+2. __[1 Priority]__ Implement the option to create a new chatroom.
+__Acceptance requirements:__  Users can select "Create Chatroom" and proceed to configure a chatroom.
+3. __[1 Priority]__  Implement the option to join an existing chatroom by entering a chatroom ID.
+__Acceptance requirements:__  Users can enter a valid chatroom ID and join the room.
+1. __[1 Priority]__ Implement user registration with a unique username.
+__Acceptance requirements:__ Users can create unique usernames at registration.
+1. __[1 Priority]__ Implement functionality to create a group chat with a custom name.
+__Acceptance requirements:__ Users can name and create a new group chat.
+
 ## User Stories
 **Main Menu**
 - As a user of the chat app, I want to see a main menu after logging in so that I can easily navigate the app’s features.
