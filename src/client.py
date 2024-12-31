@@ -16,11 +16,13 @@ incoming messages from the server and displays them to the user.
 import socket # Enables TCP/IP networking for client-server communication between chat users
 from threading import Thread # Handles concurrent client connections and message processing
 import os # Handles operating system operations like clearing terminal and process management
+import getpass # Securely prompts the user for password input
 from rich import print
 from rich.panel import Panel
 from rich.align import Align
 from rich import print
 from rich.layout import Layout
+
 
 class Client:
     """
@@ -59,11 +61,11 @@ class Client:
             # Check the user's choice to either login or register
             if choice == '1':
                 username = input("Username: ")
-                password = input("Password: ")
+                password = getpass.getpass("Password: ")
                 self.socket.send(f"/login {username} {password}".encode()) # Send login request to the server
             elif choice == '2':
                 username = input("Choose username: ")
-                password = input("Choose password: ")
+                password = getpass.getpass("Choose Password: ")
                 self.socket.send(f"/register {username} {password}".encode()) # Send register request to the server
             elif choice == '3':
                 print("Exiting...")
