@@ -3,97 +3,135 @@
  * email: owieo204@potsdam.edu
  * course: CIS 480 Senior Project
  * assignment: Senior Project
- * due 12/9/24 
+ * due 3/1/25 
 
+# TCP Chat Application - ChitChat
+# Table of Contents
 
-# TCP Chat Application
+- [TCP Chat Application](#tcp-chat-application)
+  - [Features](#features)
+  - [How to Run + Environment Setup](#how-to-run--environment-setup)
+  - [Project Structure](#project-structure)
+  - [Usage Guide](#usage-guide)
+    - [Starting the Server](#starting-the-server)
+    - [Running a Client](#running-a-client)
+    - [Client Commands](#client-commands)
+  - [Technology Stack](#technology-stack)
+  - [Documentation](/Documentation/documentation.md)
 
 ## Description
-This project is a TCP-based chat application for real-time communication between multiple clients connected to a central/main server. It offers a command-line interface alongside a graphical user interface (GUI), supports private and broadcast messaging, file sharing, and seamless reconnection for disconnected clients.
+ChitChat is a TCP-based chat application enabling real-time communication between multiple clients through a central server. This application features a command-line interface, supports group chats, and includes user authentication with secure password management.
+
+## [Documentation can be found here.](/Documentation/documentation.md)
+
 
 ## Features
 - **Server Features**:
-  - User authentication.
-  - Client management with unique identifiers.
-  - Broadcast, private, and group messaging.
-  - File sharing with bandwidth management.
+  - Authentication & User Management
+    - User Registration System
+    - Login System
+    - Client Connection Management
+  - Chatroom Management
+    - Chatroom Creation
+    - Chatroom Administration
+    - Message Handling
+  - Database Management
+    - User Data
+    - Chatroom Data
+    - Message Data
+  - Server Administration
+    - Server Control
+    - Error Handling
 
 - **Client Features**:
-  - Command-line and GUI-based interfaces.
-  - Real-time message sending and receiving.
-  - Notifications for new messages and connection status.
-
-## Technology Stack
-- **Programming Language**: Python
-- **Libraries**: `socket`, `threading`, `tkinter`
+  - User Interface
+    - Main Menu
+    - Authentication Interface
+    - Chatroom Interface
+  - Command System
+    - General Commands
+    - Chatroom Commands
+  - Connection Management
+    - Server Communication
+    - Message Handling
+  - User Experience
+    - Navigation 
+    - Error Handling
+  - Session Management
+    - User Session
+    - Chatroom Session
 
 ## How to Run + Environment Setup
 1. Clone the repository:
    ```bash 
    git clone https://cs-devel.potsdam.edu/S24-480-owieo204/tcp-chat.git
+   cd tcp-chat/src
 
-- Since we are using one machine for now, create 3 different terminal sessions to simulate 3 connected machines .
+2. Create the virtual environment:
+   ```bash 
+   python -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
 
-2. Run server.py
-    ```bash
-    python3 server.py
+## Project Structure
+```
+tcp-chat/src
+│
+├── server.py           # Server implementation
+├── client.py           # Client implementation
+├── requirements.txt    # Project dependencies
+├── help.txt           # Help documentation
+└── chat_app.db        # SQLite database
+```
+## [Documentation can be found here.](/Documentation/documentation.md)
 
-3. Run client.py
-    ```bash
-    python3 client.py --host 127.0.0.1 --port 9090 
+## Usage Guide 
+GIFS coming soon*
 
+### Starting the Server
 
+1. Activate the virtual environment (if not already activated)
+2. Start the server:
+   ```bash
+   python3 server.py
+   ```
+3. The server will start listening on localhost (127.0.0.1) port 7632
 
+### Running a Client
 
-## Program Execution Instructions  
- 
-1. After __Python3 client.py__ is ran, Enter your chat name.
-2. Write text in client.py CLI and it will broadcast to any other client that is is our server.
-    - Open multiple terminal sessions and run python3 client.py again.
+1. Open a new terminal window
+2. Activate the virtual environment
+3. Start the client:
+   ```bash
+   python3 client.py
+   ```
 
+### Client Commands
 
-## __Testing__
-## Testing Log
+After connecting, you can: 
 
-| Test #  | Test Name               | Description                                         | Expected Result                          | Actual Result      | Status  |
-|---------|-------------------------|-----------------------------------------------------|------------------------------------------|--------------------|---------|
-| 1       | Simultaneous Messaging  | Test simultaneous chatting between two clients.     | Both clients send and receive messages.  | Messages exchanged with data loss issues. | [ ] In progress |
-| 2       | Server Startup          | Start the server and ensure it listens on the port. | Server starts without errors.            | TBD                | [ ] In Progress |
-| 3       | Client Connection       | Connect a single client to the server.              | Client successfully connects.            | TBD                | [ ] In Progress |
+1. **Register/Login**
+   - Choose to register a new account or login
+   - Usernames must be unique
+   - Passwords must be at least 8 characters
 
-## Testing Information
+2. **Main Menu Options**
+   - Create new chatroom: Create a custom chatroom where you can chat with other users. You'll be prompted to provide a name for your chatroom.
+   - Join existing chatroom: Connect to an already created chatroom by entering its name. You can then participate in group conversations with other members.
+    - While user is in chatroom, they are able to send messages to the chat room. Type /view to view connected users in chatrooms and type /exit to leave the chat room.
+   - View available chatrooms: See a list of all currently active chatrooms that you can join.
+   - Access help: View detailed instructions and commands available in the application.
+   - Exit application: Safely disconnect from the server and close the application.
 
-- Program was tested on one machine. I intend to test it out with multiple machines.
+## Technology Stack
+- **Programming Language**: Python3
+- **Libraries**: `socket`, `threading`, `sqlite3`, `bcrypt`, `os`, `Rich`
 
-## Simultaneous Messaging
-
-**Objective**:  
-Verify that multiple clients will be able to send and receive messages at the same time without conflicts or data loss.
-
-**Setup**:  
-- Started the server on one terminal session.  
-- Connected two clients to the server from separate terminal sessions.  
-- Initiated simultaneous message exchanges between the clients using the script "__testChat.sh__". 
-  - __Test Script Description: testChat.sh__  
-    __testChat.sh__ connects two clients to the server with each client running in 
-    separate threads, and sends messages from both clients at the same time. It checks for 
-    proper receipt of messages without delays, duplication, or loss, ensuring real-time
-    communication functionality. 
-      
-  - __Test Script Description: portClear.sh__   
-    __portClear.sh__ clears ports from being used that may get clobbered when running these test. This is to ensure
-    a port is open before testing on it.
-          
-**Results**:  
-- When running my tests, data appears to be lost. Im expected more dialouge from the other two clients "Alice" and "Bob".    
-
-<div align="center">
-    <img src="screenshot1.png" alt="Project Screenshot" width="600">
-</div>
-
+## [Documentation can be found here.](/Documentation/documentation.md)
 
 
-## Known Bugs
 
-- When you disconnect a client, the server loses track of connected clients.
+
+
+
 

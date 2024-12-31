@@ -11,6 +11,23 @@ __Acceptance requirements:__  Users can enter a valid chatroom ID and join the r
 __Acceptance requirements:__ Users can create unique usernames at registration.
 1. __[1 Priority]__ Implement functionality to create a group chat with a custom name.
 __Acceptance requirements:__ Users can name and create a new group chat.
+1. __[1 Priority]__ Create a database schema for storing user information, including username and hashed password.
+__Acceptance requirements:__  User data is securely stored in the database.
+2. __[1 Priority]__ Practice SQLite Create, Read, Update, Delete operations.
+__Acceptance requirements:__  General understanding of the operations(Testing)
+3. __[1 Priority]__  Create a database schema for storing chat messages, including sender ID and content.
+__Acceptance requirements:__  Messages are stored and retrievable by user and chatroom.
+2. __[1 Priority]__  Validate user credentials securely before allowing login.
+__Acceptance requirements:__  Credentials are verified without exposing sensitive data.
+
+
+I want to be able to kick a user from any group chat using the server
+
+I want to be able to see server logs
+
+I want to be able to remove user accounts from the database using the server referencing their name
+
+I want to be able to provide Spam protection
 
 ## User Stories
 **Main Menu**
@@ -32,12 +49,16 @@ __Acceptance requirements:__ Users can name and create a new group chat.
 - As a user of the chat app, I want to register a username when connecting to the server so that I can be identified uniquely in the chat.
 - As a user of the chat app, I want to log out of the application so that I can disconnect securely.
 - As a user of the chat app, I want to be notified when another user logs in or logs out so that I can track user activity.
+- As a user of the chat app, I want to be able to kick a user as an admin of group chat
+- As a user of the chat app, I want to be able to kick a user from any group chat using the server
+- As a user of the chat app, I want to be able to remove user accounts from the database using the server referencing their name.
 
 **Group Chat**
 - As a user of the chat app, I want to create a group chat with a custom name so that I can organize discussions with specific users.
 - As a user of the chat app, I want to invite other users to a group chat so that I can collaborate.
 - As a user of the chat app, I want to be notified when I am added to a group chat so that I can decide whether to participate.
 - As a user of the chat app, I want to leave a group chat so that I can exit discussions that are no longer relevant.
+- As a user of the chat app, I want to be able to provide Spam protection
 
 **Private Messaging**
 - As a user of the chat app, I want to send a direct message to another user by name so that I can communicate privately.
@@ -49,6 +70,7 @@ __Acceptance requirements:__ Users can name and create a new group chat.
 - As a user of the chat app, I want to receive an error message if my connection to the server is lost so that I can troubleshoot the issue.
 - As a user of the chat app, I want to reconnect to the server automatically so that I can resume chatting without manual intervention.
 - As a user of the chat app, I want to know when the server is shutting down so that I can prepare for disconnection.
+- As a user of the chat app, I want to be able to see server logs
 
 **Security**
 - As a user of the chat app, I want all my messages to be encrypted so that I can ensure the security of my communications.
@@ -81,6 +103,9 @@ __Acceptance requirements:__ Users can name and create a new group chat.
 - Display an error message if the username is already taken during registration.
 **User Management**
 - Implement user registration with a unique username.
+- Be able to kick a user as an admin of group chat.
+- Be able to kick a user from any group chat using the server.
+- Be able to remove user accounts from the database using the server referencing their name.
 - Develop functionality to display a list of all online users.
 - Implement a feature to allow users to change their username dynamically while connected.
 - Implement a logout feature to disconnect users securely.
@@ -146,6 +171,8 @@ __Acceptance requirements:__ Users receive a clear error message for duplicate u
 **User Management**
 1. __[1 Priority]__ Implement user registration with a unique username.
 __Acceptance requirements:__ Users can create unique usernames at registration.
+1. __[2 Priority]__ Kick a user as an admin of group chat
+__Acceptance requirements:__ Users are able to kick a user as an admin of group chat.
 2. __[2 Priority]__ Develop functionality to display a list of all online users(UserID).
 __Acceptance requirements:__ Users can see a list of active users in the system.
 3. __[2 Priority]__ Implement a feature to allow users to change their username dynamically while connected.

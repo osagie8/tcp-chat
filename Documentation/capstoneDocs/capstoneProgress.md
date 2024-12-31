@@ -13,6 +13,10 @@
 
 [Dec 26] - Debugging and more Group chat Work
 
+[Dec 27] - Work on User Login System and Documentation.
+
+[Dec 30] - Work on Basic version with documentation
+		- Debugging and testing app
 
 
 		

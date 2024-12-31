@@ -183,6 +183,10 @@ References
 
 - Ivan-Sincek (no date) Ivan-Sincek/chat-app: Multithreading TCP server and client communicating over TCP/IP - Windows Forms application., GitHub. Available at: https://github.com/ivan-sincek/chat-app (Accessed: 24 November 2024).
 
+https://github.com/BasharAZ1/Chat-app-using-socket/tree/main
+
+https://github.com/nishi719/Chat-Application-Using-Socket-Programming/blob/main/server.py
+
 
 
 
