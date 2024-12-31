@@ -54,7 +54,7 @@ class Client:
     """
     def authenticate(self):
         while True:
-            print(Panel("Hello, Welcome to [green]Chitchat![/green] \n [green3] 1. Login [/green3] \n [dark_turquoise] 2. Register [/dark_turquoise]"))
+            print(Panel("Hello, Welcome to [green]Chitchat![/green] \n [green3] 1. Login [/green3] \n [dark_turquoise] 2. Register [/dark_turquoise]\n [dark_turquoise] 3. Exit [/dark_turquoise]"))
             choice = input(">>")
             # Check the user's choice to either login or register
             if choice == '1':
@@ -65,6 +65,9 @@ class Client:
                 username = input("Choose username: ")
                 password = input("Choose password: ")
                 self.socket.send(f"/register {username} {password}".encode()) # Send register request to the server
+            elif choice == '3':
+                print("Exiting...")
+                os._exit(0)
             else:
                 print("Invalid choice")
                 continue

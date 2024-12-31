@@ -198,8 +198,12 @@ class Server:
                     client_socket.send(response.encode())
                     if "successful" in response:
                         client_name = username 
-                        self.client_info[client_socket] = username  
+                        self.client_info[client_socket] = username
 
+                #elif message.startswith("/exit"): # Handle exit command
+                    #os._exit(0)
+                    #break
+                    
                 elif not client_name: # Block all other commands until client is authenticated
                     client_socket.send("Please login or register first.".encode())
                     continue
