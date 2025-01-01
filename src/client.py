@@ -22,6 +22,8 @@ from rich.panel import Panel
 from rich.align import Align
 from rich import print
 from rich.layout import Layout
+from rich.console import Console
+from datetime import datetime
 
 
 class Client:
@@ -92,25 +94,49 @@ class Client:
     to the server, and processes the server’s responses to execute the selected action.
 
     """    
+    # MARK: Main Menu
     def client_main_menu(self):
         while True:
             # Display main menu options
-            print(Panel(Align.center("[green] Main Menu [/green]")))
-            print(Panel(Align.center("[green] 1. Create new Chatroom [/green] \n [green] 2. Join existing Chatroom [/green] \n [green] 3. View available Chatrooms [/green] \n [green] 4. Help [/green] \n [green] 5. Exit [/green]")))
+            #print(Panel(Align.center("[green] Main Menu [/green]")))
+            #print(Panel(Align.center("[green] 1. Create new Chatroom [/green] \n [green] 2. Join existing Chatroom [/green] \n [green] 3. View available Chatrooms [/green] \n [green] 4. Help [/green] \n [green] 5. Exit [/green]")))
 
-            #layout = Layout()
-            #layout.split_column(Layout(Panel("Main Menu", style="green")),
-            #Layout(name="lower")
-            #)
-            #layout["lower"].split_row(Layout(name="left"),
-            #Layout(name="right"),
-            #)
-            #print(layout)
-            #print("\nHello " + self.name + ", Welcome to the chat app!")
-
-
+            console = Console()
+            layout = Layout()
+            layout.split(
+            Layout(name="header", size=3),
+            Layout(name="body"),
+            Layout(name="bottom", size=3),
+            )
            
-            choice = input("Enter your choice: ") # Get user input for menu choice
+            layout["header"].split_row(
+                Layout(name="left"),
+                Layout(name="middle"),
+                Layout(name="right"),
+            )
+
+            layout["body"].split_row(
+                Layout(name="left"),
+                Layout(name="right"),
+            )
+            layout["bottom"].split_row(
+                Layout(name="one"),
+                
+            )
+
+            #layout["header"]["left"].update(Panel(Align.center("User: " + self.name), style="green"))
+            layout["header"]["left"].update(Panel(Align.center(f"User: {self.name}\n"), style="green"))
+            layout["header"]["middle"].update(Panel(Align.center("[bold]Main Menu[/bold]"), style="cyan"))
+            layout["header"]["right"].update(Panel(Align.center("Chitchat"), style="green"))
+
+            layout["body"]["left"].update(Panel(Align.center("\n      [bold]Options[/bold] \n \n [green] 1. Create new Chatroom [/green] \n [green] 2. Join existing Chatroom [/green] \n [green] 3. View available Chatrooms [/green] \n [green] 4. Help [/green] \n [green] 5. Exit [/green]"), style="green"))
+            layout["body"]["right"].update(Panel(Align.center("\n[bold]Inbox[/bold]"), style="green"))
+
+            layout["one"].update(Panel(Align.center("Info"), style="green"))
+
+            console.print(layout)
+           
+            choice = input("") # Get user input for menu choice
 
             if choice == '1': # Create new chatroom
                 self.clear_terminal()
@@ -133,7 +159,8 @@ class Client:
                 print("Available chatrooms:")
                 self.socket.send("/chatroom_view".encode()) # Send chatroom view request to the server
                 response = self.socket.recv(1024).decode() # Wait for server response after viewing chatrooms
-                print(response)
+                chatroom_screen = response.split("\n")
+                print(chatroom_screen)
 
             elif choice == '4':
                 self.help_screen() # Display help screen
@@ -172,18 +199,25 @@ class Client:
     """
     def chatroom_screen(self, chatroom_name):
         self.clear_terminal()
-        print(f"\033[1;32;40m{chatroom_name}\033[0m\n")
-        print(f"Welcome to the chatroom {chatroom_name}! You (\033[4m {self.name} \033[0m) can start chatting now.")
+        print(Panel.fit(f"[green]Chatroom: {chatroom_name}[/green]  |  [cyan]User: {self.name}[/cyan]", style="bold"))
+        #print(f"Welcome to the chatroom {chatroom_name}! You ({self.name}), can start chatting now.")
+    
+
         print("Type your messages below or type '/exit' to leave the chatroom.")
-        print("Type '/view' to view users in chatroom.")
+        print("Type '/view' to view users in chatroom.\n")
         Thread(target=self.receive_message, daemon=True).start() # Start thread to receive messages from the server
         
         while True:
-            message = input("> ") # Chatroom message input
+            message = input("") # Chatroom message input
+            # Print out own message
+            print(Panel(f"[cyan]{self.name}[/cyan]: {message}", style="cyan", width=60)) 
+
             if message.lower() == "/view": 
                 self.socket.send(f"/view_chatroom_users {chatroom_name}".encode()) # Send request to view chatroom users
                 response = self.socket.recv(1024).decode()
                 print(response)
+                print("\nContinue chatting below or type '/exit' to leave the chatroom.")
+                continue  # Continue the chat loop after showing users
 
             if message.lower() == "/exit": # Exit chatroom
                 self.socket.send(f"/exit_chatroom {chatroom_name}".encode()) # Send exit chatroom request to the server
@@ -232,7 +266,8 @@ class Client:
                 if server_message == "exit":
                     print("You have been returned to the main menu.") # Return to main menu if chatroom is exited
                     break
-                print(server_message)
+                current_time = datetime.now().strftime("%H:%M")
+                print(Panel(f"[cyan]{current_time}[/cyan] {server_message}", style="green", width=60))
             except:
                 print("Connection closed by server.")
                 self.socket.close()

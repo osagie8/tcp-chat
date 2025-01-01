@@ -22,13 +22,19 @@ import bcrypt # Provides secure password hashing for user authentication
 import os # Handles operating system operations like clearing terminal and process management
 from rich.panel import Panel
 from rich.align import Align
+from rich.console import Console
 from rich import print
 from rich.layout import Layout
+from rich.spinner import Spinner
+from time import sleep
+from rich.live import Live
+
 
 class Server:
 
     clients = [] # Maintains a list of active client socket connections for managing client communication 
     chatrooms = {} # Dictionarty to map chatroom names to their metadata 
+    active_chatrooms = {}  # New dictionary to track active members in chatrooms
 
     """
     __init__ Initializer to initialize the server and up core components
@@ -156,7 +162,7 @@ class Server:
             except Exception as e:
                 if self.running:  # Only log errors if server is still running
                     print(f"Error accepting connection: {e}")
-                    
+    #MARK: HandleClient                
     """
     handle_client Processes all incoming messages and commands from a connected client
 
@@ -236,12 +242,25 @@ class Server:
                     conn.close()
                     client_socket.send(', '.join(chatrooms).encode())
 
-                elif message.startswith("/exit_chatroom"): # Chatroom exit command
+                elif message.startswith("/exit_chatroom"):
                     chatroom_name = message.split(" ", 1)[1]
+                    # Remove user from active chatroom members
+                    if chatroom_name in self.active_chatrooms and client_name in self.active_chatrooms[chatroom_name]:
+                        self.active_chatrooms[chatroom_name].remove(client_name)
+                        # If chatroom is empty, remove it from active_chatrooms
+                        if not self.active_chatrooms[chatroom_name]:
+                            del self.active_chatrooms[chatroom_name]
                     client_socket.send("exit".encode())
 
-            except Exception as e: # Handle errors and client disconnections
+            except Exception as e:
                 print(f"Error handling client: {e}")
+                # Remove user from all active chatrooms when they disconnect
+                for chatroom in list(self.active_chatrooms.keys()):
+                    if client_name in self.active_chatrooms[chatroom]:
+                        self.active_chatrooms[chatroom].remove(client_name)
+                        if not self.active_chatrooms[chatroom]:
+                            del self.active_chatrooms[chatroom]
+                
                 if client_socket in Server.clients:
                     Server.clients.remove(client_socket)
                 if client_socket in self.client_info:
@@ -296,6 +315,12 @@ class Server:
                        (chatroom_id[0], user_name)) # Add user to chatroom
         conn.commit()
         conn.close()
+
+        # Add user to active chatroom members
+        if chatroom_name not in self.active_chatrooms:
+            self.active_chatrooms[chatroom_name] = set()
+        self.active_chatrooms[chatroom_name].add(user_name)
+
         return f"Joined chatroom '{chatroom_name}'."
 
     """
@@ -308,18 +333,17 @@ class Server:
     @return String containing list of usernames 
     """
     def view_chatroom_users(self, chatroom_name):
-        conn = sqlite3.connect('chat_app.db')
-        cursor = conn.cursor()
-        cursor.execute("SELECT chatroom_id FROM chatrooms WHERE name = ?", (chatroom_name,)) # Get the chatroom ID
-        chatroom_id = cursor.fetchone()
-        if not chatroom_id:
-            conn.close()
-            return f"Chatroom '{chatroom_name}' does not exist."
-        cursor.execute("SELECT username FROM users JOIN chatroom_members ON users.user_id = chatroom_members.user_id WHERE chatroom_id = ?",
-                       (chatroom_id[0],)) # Get all users in the chatroom
-        users = [row[0] for row in cursor.fetchall()] # Extract usernames
-        conn.close()
-        return ', '.join(users)
+        # Check if the chatroom exists in active_chatrooms
+        if chatroom_name not in self.active_chatrooms:
+            return f"No active users in chatroom '{chatroom_name}'."
+        
+        # Get the list of active users in the chatroom
+        active_users = list(self.active_chatrooms[chatroom_name])
+        
+        if not active_users:
+            return f"No active users in chatroom '{chatroom_name}'."
+        
+        return "Active users: " + ', '.join(active_users)
 
     """
     broadcast_chatroom_message Broadcasts a message to all members in a chatroom
@@ -373,7 +397,7 @@ class Server:
             """, (chatroom_id[0],)) # Get all members of the chatroom
             members = [row[0] for row in cursor.fetchall()] 
             
-            formatted_message = f"{sender_name}@{chatroom_name}: {message}" # Message format with sender and chatroom
+            formatted_message = f"[bold blue]{sender_name}[/bold blue]: {message}"
             
             for client_socket in Server.clients: # Broadcast message to all connected clients
                 if client_socket in self.client_info:
@@ -433,6 +457,7 @@ class Server:
         finally:
             conn.close()
 
+
     """
     server_menu Displays and handles the server main menu
     
@@ -443,23 +468,24 @@ class Server:
       
     @param self: Server instance  
     """
+    #MARK: ServerMenu
     def server_menu(self):
-       
-        while self.running: # Continuously display the server menu
-            self.clear_terminal()
-            print(Panel(Align.center("[green] 1. Server Menu [/green]")))
-            print("1. Exit Server")
-            
-            try:
-                choice = input("\nEnter your choice: ") 
-                if choice == '1': 
-                    self.shutdown_server() # Shutdown the server
-                    break
-                else:
-                    input("Invalid choice. Press Enter to continue...")
-            except Exception as e:
-                print(f"Error in menu: {e}")
-                input("Press Enter to continue...")
+        #with Live(refresh_per_second=10) as live:
+            while self.running: # Continuously display the server menu
+                self.clear_terminal()
+                print(Panel(Align.center("[green] 1. Server Menu [/green]")))
+                print("1. Exit Server")
+                           
+                try:
+                    choice = input("\nEnter your choice: \n \n ") 
+                    if choice == '1': 
+                        self.shutdown_server() # Shutdown the server
+                        break
+                    else:
+                        input("Invalid choice. Press Enter to continue...")
+                except Exception as e:
+                    print(f"Error in menu: {e}")
+                    input("Press Enter to continue...")
     
     """
     clear_terminal Clears the terminal screen across different operating systems
