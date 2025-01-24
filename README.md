@@ -8,16 +8,16 @@
 # TCP Chat Application - ChitChat
 # Table of Contents
 
-- [TCP Chat Application](#tcp-chat-application)
+- [TCP Chat Application - ChitChat](#tcp-chat-application---chitchat)
+- [Table of Contents](#table-of-contents)
+  - [Description](#description)
+  - [Documentation can be found here.](#documentation-can-be-found-here)
   - [Features](#features)
   - [How to Run + Environment Setup](#how-to-run--environment-setup)
-  - [Project Structure](#project-structure)
-  - [Usage Guide](#usage-guide)
-    - [Starting the Server](#starting-the-server)
     - [Running a Client](#running-a-client)
     - [Client Commands](#client-commands)
   - [Technology Stack](#technology-stack)
-  - [Documentation](/Documentation/documentation.md)
+  - [Documentation can be found here.](#documentation-can-be-found-here-1)
 
 ## Description
 ChitChat is a TCP-based chat application enabling real-time communication between multiple clients through a central server. This application features a command-line interface, supports group chats, and includes user authentication with secure password management.
@@ -125,7 +125,7 @@ After connecting, you can:
 
 ## Technology Stack
 - **Programming Language**: Python3
-- **Libraries**: `socket`, `threading`, `sqlite3`, `bcrypt`, `os`, `Rich`
+- **Libraries**: `socket`, `threading`, `sqlite3`, `bcrypt`, `os`, `rich`, `getpass`
 
 ## [Documentation can be found here.](/Documentation/documentation.md)
 

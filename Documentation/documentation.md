@@ -418,3 +418,9 @@ This project was inspired by and references concepts from several open-source pr
   - https://github.com/nishi719/Chat-Application-Using-Socket-Programming
   - Referenced for server implementation patterns
 
+- This project was partially developed with the assistance of AI tools. 
+  Note: AI was used as a development aid while maintaining my oversight and responsibility
+    Generating initial drafts of code and comments.
+    Refining and debugging portions of the codebase.
+    Improving documentation structure and phrasing.
+

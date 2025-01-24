@@ -18,5 +18,7 @@
 [Dec 30] - Work on Basic version with documentation
 		- Debugging and testing app
 
-
+Jan 6 - 24th - Implement Full private Chat features
+			- Implement Server menu refinement
+			- Start testing and code refinement
 		
