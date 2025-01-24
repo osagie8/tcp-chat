@@ -22,7 +22,7 @@
 ## Description
 ChitChat is a TCP-based chat application enabling real-time communication between multiple clients through a central server. This application features a command-line interface, supports group chats, and includes user authentication with secure password management.
 
-![Chitchat chatroom demo](/Users/osagieowie/Desktop/Fall2024/SP2024/tcp-chat/chitchatdemo1.gif)
+![Chitchat chatroom demo](chitchatdemo1.gif)
 
 ## [Documentation can be found here.](/Documentation/documentation.md)
 
