@@ -1,5 +1,7 @@
 # Testing Documentation
 
+### [Wireshark Analysis](/Documentation/capstoneDocs/wiresharkAnalysis.md)
+
 ## Test Environment Setup
 
 ### Prerequisites
@@ -379,6 +381,57 @@ Steps to Reproduce:
 **Severity**: High
 **Status**: Done
 
+---
+
+
+### [Wireshark Analysis](/Documentation/capstoneDocs/wiresharkAnalysis.md)
+
+StressTest was performed to simulate multiple chat clients connecting to the server simultaneously
+
+localhost 127.0.0.1
+
+Total test duration: 25.12 seconds
+Successful clients: 96/100
+Total messages sent: 4000
+Messages per second: 159.23
+
+Total test duration: 86.05 seconds
+Successful clients: 382/400
+Total messages sent: 16000
+Messages per second: 185.93
+
+Total test duration: 374.88 seconds
+Successful clients: 921/1000
+Total messages sent: 40000
+Messages per second: 106.70
+
+Total test duration: 517.01 seconds
+Successful clients: 2334/2500
+Total messages sent: 75000
+Messages per second: 145.06
+
+---
+Over network 0.0.0.0
+
+Total test duration: 53.56 seconds
+Successful clients: 200/250
+Total messages sent: 6250
+Messages per second: 116.70
+
+Total test duration: 104.28 seconds
+Successful clients: 374/500
+Total messages sent: 15000
+Messages per second: 143.85
+
+Wi-Fi throughput shown impacted performance. The graph shows the network throughput spiking to nearly 1 Mbps. During the stress test, these spikes indicated periods of network congestion that could cause
+- Increased message latency - messages might take longer to be delivered
+- Potential message queuing or backlog on the server
+- Delayed responses to clients
+- Possible connection timeouts if the congestion persists
+  
+![TCP Screenshot](./Capture4.PNG)
+
+Network throughput showed significant variation during testing, which could be a contributing factor to any performance degradation observed when handling multiple concurrent connections.
 
 ---
 ### Bug Reports
@@ -393,7 +446,7 @@ Expected Result: [What should happen]
 Actual Result: [What actually happens]
 Environment: [Test environment details]
 Severity: [High/Medium/Low]
-Status: [Open/In Progress/Fixed]
+Status: [In Progress]
 ```
 
 ```
@@ -407,7 +460,7 @@ Expected Result: [What should happen]
 Actual Result: [What actually happens]
 Environment: [Test environment details]
 Severity: [High/Medium/Low]
-Status: [Open/In Progress/Fixed]
+Status: [Fixed]
 ```
 
 

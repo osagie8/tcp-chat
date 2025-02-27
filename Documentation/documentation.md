@@ -30,6 +30,14 @@ python3 client.py
 
 3. Register or login when prompted.
 
+### Running the Application (Using executable)
+
+1. Download the latest chitchat release file.
+2. Unzip the dist.zip file
+3. Open the server exec
+4. Open multiple client exec
+
+
 # Table of Contents
 ## [1. High-Level Architecture](#high-level-architecture)
 ## [2. Component Breakdown](#component-breakdown)
@@ -320,6 +328,9 @@ CREATE TABLE messages (
 ---
 
 # Testing
+
+## [Test Docs can be found here.](/Documentation/testing.md)
+
 ### Test Categories
 1. Connection Management
    - Server startup
@@ -350,7 +361,7 @@ CREATE TABLE messages (
 
 ---
 
-### More work on documentation to be done...
+## [Capstone Documentation](/Documentation/testing.md)
 
 ---
 

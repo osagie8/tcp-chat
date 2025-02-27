@@ -6,6 +6,59 @@ interacting with the chat application. The client can create or join chatrooms, 
 view available chatrooms, access help, and exit the application. The client also listens for
 incoming messages from the server and displays them to the user. 
 
+Code Attribution:
+- Base Socket Client Implementation: Core TCP socket client structure and message handling
+  Source: https://github.com/BasharAZ1/Chat-app-using-socket/blob/main/server.py
+  Source: https://github.com/techwithtim/Python-Socket-Chat-App/blob/main/server.py
+  Source: https://dev.to/zeyu2001/build-a-chatroom-app-with-python-44fa
+  The following code components were inspired from the developers:
+    1. Basic socket client setup:
+       - Socket creation
+       - Client connection to HOST and PORT
+       - Connection error handling
+       
+    2. Message handling structure:
+       - Message receiving thread implementation
+       - Message encoding/decoding approach
+       - Server communication protocol
+       
+    3. Threading implementation:
+       - Server listener thread creation
+       - Thread management for incoming messages
+       - Connection state management
+
+- User Interface and Authentication Implementation
+  Source: https://github.com/ZoombieShark/chat/tree/main_branch
+  Source: https://github.com/QuinnWebster/Messaging-Between-Computers/tree/master
+  The following code components were inspired from the developers:
+    1. Basic authentication interface:
+       - Login/registration form structure
+       - Credential validation approach
+       - Session management concept
+       
+    2. Client-side database handling:
+       - Local message storage
+       - User session tracking
+       - Message history management
+       
+    3. User interaction features:
+       - Command processing
+       - Status updates
+       - Error message handling
+
+- Rich Text Interface Implementation:
+    1. Terminal UI components:
+       - Panel and layout management
+       - Color and styling implementation
+       - Interactive menu system
+       
+    2. User feedback features:
+       - Status messages
+       - Error notifications
+       - Connection status display
+
+All AI suggestions were reviewed before implementation.
+
 @author Osagie Owie
 @email owieo204@potsdam.edu
 @course CIS 480 Senior Project

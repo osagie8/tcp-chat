@@ -8,6 +8,54 @@ for user and chatroom data storage and bcrypt for secure password hashing. The s
 accepts incoming client connections and manages client communication through separate 
 threads. It also features a server management menu for graceful shutdown and server administration. 
 
+Code Attribution:
+- Base Socket Server Implementation: Core TCP socket server structure and client handling
+  Source: https://github.com/BasharAZ1/Chat-app-using-socket/blob/main/server.py
+  Source: https://github.com/techwithtim/Python-Socket-Chat-App/blob/main/server.py
+  Source: https://dev.to/zeyu2001/build-a-chatroom-app-with-python-44fa
+
+  The following code components were inspired from the developers
+    1. Basic socket server setup:
+       - Socket creation
+       - Server binding to HOST and PORT
+       - Basic server listening structure
+       
+    2. Client connection handling:
+       - Thread creation for each client connection
+       - Basic structure for accepting client connections
+       - Client socket storage concept 
+       
+    3. Message handling structure:
+       - Basic message receiving loop concept
+       - Message encoding/decoding approach
+       - Client message broadcasting concept (heavily modified)
+       
+    4. Threading implementation:
+       - Use of threading.Thread for client handling
+       - Thread target and args structure
+       - Concurrent client management approach
+
+- Authentication and Database Implementation
+  Source: https://github.com/ZoombieShark/chat/tree/main_branch
+  Source: https://github.com/QuinnWebster/Messaging-Between-Computers/tree/master
+  The following code components were inspired from the developers
+    1. Basic SQLite database structure:
+       - Database connection with sqlite3
+       - Basic table creation approach
+       - Error handling for existing tables
+    
+    2. User table schema concept:
+       - User ID as primary key
+       - Username and login storage
+       - Registration date tracking
+       
+    3. Basic authentication functions:
+       - User existence checking
+       - Login verification structure
+       - Username lookup functionality
+
+All AI suggestions were reviewed before implemention
+
 @author Osagie Owie
 @email owieo204@potsdam.edu
 @course CIS 480 Senior Project
@@ -61,8 +109,9 @@ class Server:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Create a TCP socket
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Allow reuse of the address
         self.socket.bind((HOST, PORT))
-        self.socket.listen(10) # Listen for up to 10 connections
+        self.socket.listen(100) # Listen for up to 10 connections
         self.initialize_database()
+        self.clients = []
         self.client_info = {}  # Store client info
         self.running = True # Server running status flag
 
@@ -585,24 +634,34 @@ class Server:
     @param self: Server instance
     """
     def shutdown_server(self):
-        # Avoid duplicate shutdown calls
+            # Avoid duplicate shutdown calls
         if not self.running:
             return
         
         self.running = False
+        print("[bold red]Initiating server shutdown...[/bold red]")
         
-        # Broadcast a shutdown notice to all clients and close their sockets
-        for client_socket in self.clients:
+        # Notify all clients of shutdown
+        for client_socket in Server.clients[:]:  # Create a copy of the list to iterate
             try:
+                print(f"Notifying client {self.client_info.get(client_socket, 'unknown')}")
                 client_socket.send("Server is shutting down...".encode())
-            except:
-                pass
-            client_socket.close()
+                client_socket.close()
+            except Exception as e:
+                print(f"Error notifying client: {e}")
         
-        self.clients.clear()
+        # Clear client tracking structures
+        Server.clients.clear()
+        self.client_info.clear()
+        self.active_chatrooms.clear()
         
         # Close the server socket
-        self.socket.close()
+        try:
+            self.socket.close()
+            print("[bold red]Server socket closed.[/bold red]")
+        except Exception as e:
+            print(f"Error closing server socket: {e}")
+        
         print("[bold red]Server has shut down.[/bold red]")
         sys.exit(0)
 
@@ -672,7 +731,19 @@ class Server:
         table.add_column("Port", style="yellow")
         table.add_column("Connected Since", style="magenta")
         
-        
+        # Add this section to populate the table
+        for client_socket, username in self.client_info.items():
+            try:
+                addr = client_socket.getpeername()
+                table.add_row(
+                    username,
+                    addr[0],
+                    str(addr[1]),
+                    datetime.now().strftime("%H:%M:%S")
+                )
+            except:
+                continue
+
         console.print(table)
         input("\nPress Enter to return to main menu...")
 
@@ -971,6 +1042,54 @@ class Server:
                 except:
                     pass
 
+
+    def remove_client(self, client_socket, client_name):
+        """
+        Cleanly removes a client from the server and performs all necessary cleanup
+        """
+        print(f"Starting cleanup for client {client_name}")
+
+        try:
+            # Remove from chatrooms first
+            if client_name:
+                for chatroom in list(self.active_chatrooms.keys()):
+                    if client_name in self.active_chatrooms[chatroom]:
+                        print(f"Removing {client_name} from chatroom {chatroom}")
+                        self.active_chatrooms[chatroom].remove(client_name)
+                        
+                        # Remove empty chatrooms
+                        if not self.active_chatrooms[chatroom]:
+                            del self.active_chatrooms[chatroom]
+                            print(f"Removed empty chatroom {chatroom}")
+                        else:
+                            # Notify others in chatroom
+                            try:
+                                self.broadcast_chatroom_message(chatroom, "Server", f"{client_name} has disconnected")
+                            except Exception as e:
+                                print(f"Error broadcasting disconnect message: {e}")
+
+            # Remove from client tracking structures
+            if client_socket in Server.clients:
+                print(f"Removing client from Server.clients. Before: {len(Server.clients)}")
+                Server.clients.remove(client_socket)
+                print(f"After removal: {len(Server.clients)}")
+
+            if client_socket in self.client_info:
+                print(f"Removing client from client_info")
+                del self.client_info[client_socket]
+
+            # Close the socket
+            try:
+                client_socket.close()
+                print("Closed client socket")
+            except Exception as e:
+                print(f"Error closing client socket: {e}")
+
+            print(f"Successfully completed cleanup for client {client_name}")
+
+        except Exception as e:
+            print(f"Error during client cleanup: {e}")
+
     
 """
 ServerStatus manages server monitoring interface display and real-time updates.
@@ -1030,7 +1149,7 @@ class ServerStatus:
         layout["header"]["right"].update(
             Panel(
                 Align.center(
-                    f"[green]Active Clients: {len(self.server.clients)}[/green]\n"
+                    f"[green]Active Clients: {len(Server.clients)}[/green]\n"
                 ),
                 style="green"
             )
@@ -1097,5 +1216,5 @@ class ServerStatus:
 
     
 if __name__ == '__main__':
-    server = Server('127.0.0.1', 7632) # Uses Localhost IP for testing   
+    server = Server('0.0.0.0', 7632) # Uses Localhost IP for testing   
     server.listen() # Start listening for incoming connections

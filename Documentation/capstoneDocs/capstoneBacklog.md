@@ -19,6 +19,37 @@ __Acceptance requirements:__  General understanding of the operations(Testing)
 __Acceptance requirements:__  Messages are stored and retrievable by user and chatroom.
 2. __[1 Priority]__  Validate user credentials securely before allowing login.
 __Acceptance requirements:__  Credentials are verified without exposing sensitive data.
+1. __[1 Priority]__  Implement functionality to send a direct message to another user by their username.
+__Acceptance requirements:__  Users can send private messages to specific users.
+2. __[2 Priority]__  Develop notifications for private messages, distinguishing them from public messages.
+__Acceptance requirements:__  Users receive notifications for private messages.
+3. __[2 Priority]__  Implement a feature to view a list of private conversations.
+4. 1. __[1 Priority]__  Write test cases for server startup and listening capabilities.
+__Acceptance requirements:__  Tests ensure the server starts and listens on valid ports.
+2. __[1 Priority]__  Write test cases to handle invalid port errors.
+__Acceptance requirements:__  The system gracefully handles invalid port scenarios.
+3. __[2 Priority]__  Write test cases for successful client connections.
+__Acceptance requirements:__  Tests confirm multiple clients can connect successfully.
+4. __[2 Priority]__  Write test cases for database operations (e.g., adding, retrieving, and deleting users/messages).
+__Acceptance requirements:__  Database interactions function correctly and securely.
+5. __[2 Priority]__  Simulate and test multiple concurrent client connections.
+__Acceptance requirements:__  The app maintains stability under high concurrency.
+1. __[1 Priority]__ Create a database schema for storing user information, including username and hashed password.
+__Acceptance requirements:__  User data is securely stored in the database.
+2. __[1 Priority]__ Practice SQLite Create, Read, Update, Delete operations.
+__Acceptance requirements:__  General understanding of the operations(Testing)
+3. __[1 Priority]__  Create a database schema for storing chat messages, including sender ID and content.
+__Acceptance requirements:__  Messages are stored and retrievable by user and chatroom.
+4. __[2 Priority]__  Create a database schema for storing chatroom details, including room ID and admin ID.
+__Acceptance requirements:__  Chatroom details are persisted for session management.
+1. __[1 Priority]__  Implement error handling for server disconnections with user-facing error messages.
+__Acceptance requirements:__  Users are notified when their connection is lost.
+1. __[1 Priority]__ Implement functionality to create a group chat with a custom name.
+__Acceptance requirements:__ Users can name and create a new group chat.
+2. __[2 Priority]__ Allow admins to invite users to a group chat.
+__Acceptance requirements:__  Admins can add participants by username.
+1. __[1 Priority]__ Implement functionality to create a group chat with a custom name.
+__Acceptance requirements:__ Users can name and create a new group chat.
 
 
 I want to be able to kick a user from any group chat using the server
