@@ -439,8 +439,8 @@ Network throughput showed significant variation during testing, which could be a
 Title: [Active Clients # in Server not updating when user signs out]
 Description: [Detailed description]
 Steps to Reproduce:
-1. [Step 1]
-2. [Step 2]
+1. Start Server
+2. Top Right notification should be accurate
 ...
 Expected Result: [What should happen]
 Actual Result: [What actually happens]
@@ -453,8 +453,8 @@ Status: [In Progress]
 Title: [Error message shows but succesfully removes user account]
 Description: [Detailed description]
 Steps to Reproduce:
-1. [Step 1]
-2. [Step 2]
+1. [Nagivate to User Management]
+2. [Remove a registered user]
 ...
 Expected Result: [What should happen]
 Actual Result: [What actually happens]
